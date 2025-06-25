@@ -1,0 +1,102 @@
+/* Additional custom styles for GSM operator analysis page */
+
+/* Smooth scrolling for the entire page */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Animation for operator cards */
+.operator-card {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Custom focus styles for better accessibility */
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(30, 60, 114, 0.25);
+    border-color: #2a5298;
+}
+
+/* Loading animation for the analyze button */
+.btn-analyze.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.btn-analyze.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #ffffff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: button-loading-spinner 1s linear infinite;
+}
+
+@keyframes button-loading-spinner {
+    from {
+        transform: rotate(0turn);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .operator-card {
+        margin-bottom: 1rem;
+    }
+    
+    .header {
+        padding: 1.5rem 0;
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+    }
+}
+
+/* Print styles */
+@media print {
+    .header, .btn-analyze, footer {
+        display: none;
+    }
+    
+    .result-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+} 

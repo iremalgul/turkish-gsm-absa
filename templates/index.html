@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Türk GSM Operatörleri Analizi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .operator-card {
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            margin-bottom: 1.5rem;
+            background: white;
+        }
+        .operator-card:hover {
+            transform: translateY(-5px);
+        }
+        .operator-logo {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin: 1rem auto;
+        }
+        .vodafone { border-top: 5px solid #e60000; }
+        .turkcell { border-top: 5px solid #f58220; }
+        .turktelekom { border-top: 5px solid #00a0e3; }
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        .sentiment-positive { color: #28a745; }
+        .sentiment-negative { color: #dc3545; }
+        .sentiment-neutral { color: #6c757d; }
+        .form-control {
+            border-radius: 10px;
+            padding: 1rem;
+            font-size: 1.1rem;
+        }
+        .btn-analyze {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+        .btn-analyze:hover {
+            transform: scale(1.05);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header text-center">
+        <div class="container">
+            <h1 class="display-4">Türk GSM Operatörleri Analizi</h1>
+            <p class="lead">Müşteri yorumlarını analiz ederek operatörler hakkında detaylı bilgi edinin</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="operator-card vodafone text-center p-4">
+                    <img src="{{ url_for('static', path='/vodafone.png') }}" alt="Vodafone" class="operator-logo">
+                    <h3>Vodafone</h3>
+                    <p class="text-muted">GSM Operatörü</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="operator-card turkcell text-center p-4">
+                    <img src="{{ url_for('static', path='/turkcell.png') }}" alt="Turkcell" class="operator-logo">
+                    <h3>Turkcell</h3>
+                    <p class="text-muted">GSM Operatörü</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="operator-card turktelekom text-center p-4">
+                    <img src="{{ url_for('static', path='/turktelekom.png') }}" alt="Türk Telekom" class="operator-logo">
+                    <h3>Türk Telekom</h3>
+                    <p class="text-muted">GSM Operatörü</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="POST" action="/process_sentence" class="mb-4">
+                            <div class="mb-3">
+                                <label for="sentence" class="form-label">Yorumunuzu Girin</label>
+                                <textarea class="form-control" id="sentence" name="sentence" rows="4" 
+                                    placeholder="Örnek: Turk Telekom her yönden çok daha iyi. Vodafone kullanıyorum ve 70 TL paket ücreti ödüyorum, 15gb 1000dk veriyor. Pahalı geliyor. Turkcell konusunda ise emin değilim."></textarea>
+                                {% if error %}
+                                <div class="alert alert-danger mt-2" role="alert">
+                                    {{ error }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-analyze">Analiz Et</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                {% if response %}
+                <div class="result-card">
+                    <h3 class="mb-4">Analiz Sonuçları</h3>
+                    
+                    <div class="mb-4">
+                        <h5>Girilen Yorum:</h5>
+                        <p class="lead">{{ response.Sentence }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>Tespit Edilen Varlıklar:</h5>
+                        <ul class="list-group">
+                            {% for entity in response.Entities %}
+                            <li class="list-group-item">{{ entity }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h5>Duygu Analizi:</h5>
+                        <ul class="list-group">
+                            {% for sentiment in response.Sentiments %}
+                            <li class="list-group-item">
+                                {% if 'Positive' in sentiment %}
+                                <span class="sentiment-positive">👍 {{ sentiment }}</span>
+                                {% elif 'Negative' in sentiment %}
+                                <span class="sentiment-negative">👎 {{ sentiment }}</span>
+                                {% else %}
+                                <span class="sentiment-neutral">😐 {{ sentiment }}</span>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center mt-5 mb-4">
+        <p class="text-muted">© 2024 Türk GSM Operatörleri Analiz Platformu</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

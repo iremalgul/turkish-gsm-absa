@@ -1,0 +1,13 @@
+{
+    "sentence": "Turk Telekom her yönden çok daha iyi. Vodafone kullanıyorum ve 70 TL paket ücreti ödüyorum, 15gb 1000dk veriyor. Pahalı geliyor. Turkcell konusunda ise emin değilim.",
+    "entities": [
+        "Turk Telekom -> Organization",
+        "Vodafone -> Organization",
+        "Turkcell -> Organization"
+    ],
+    "sentiment": [
+        "Turk Telekom -> Positive",
+        "Vodafone -> Negative",
+        "Turkcell -> Neutral"
+    ]
+}
