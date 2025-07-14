@@ -87,6 +87,12 @@ python mainapi.py
 - Performs sentiment classification per entity
 - Displays results as structured entity-sentiment pairs
 
+### Example: Web Interface Screenshot
+![Web Interface](static/webpage.png)
+
+### Example: Analysis Result Output
+![Analysis Result](static/analysis_result.png)
+
 ---
 
 ## 📊 Performance Summary
